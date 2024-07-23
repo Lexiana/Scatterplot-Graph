@@ -121,5 +121,26 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
             .text(d => d.text);
 
         // add event listeners
+        circles.on("mouseover", (event, d) => {
 
+            // mouse position
+            const [x, y] = d3.pointer(event, this);
+
+            // show and place tooltip + attribute
+            tooltip.style("opacity", .8)
+                .transition()
+                .duration(0);
+            tooltip.style("left", (x + 10) + "px")
+                .style("top", (y - 28) + "px")
+                .attr("data-year", d.Year)
+
+            // set tooltip html
+            tooltip.html(
+                `<p>${d.Name}: ${d.Nationality}</p>
+                <p>Year: ${d.Year}</p>
+                <p>Time: ${timeFormat(new Date(d.Seconds * 1000))}</p>
+                ${d.Doping ? `<p>Doping Allegations: ${d.Doping}</p>` : ""}
+                `
+            )
+        })
     });
