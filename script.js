@@ -63,5 +63,63 @@ d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/mas
         svg.append("g")
             .attr("transform", "translate(" + margin.left + ",0)")
             .call(yAxis)
-            attr("id", "y-axis");
+            .attr("id", "y-axis");
+
+        // set color variable
+            const color = [
+                {doping: false,
+                color: "orange",
+                text:"No doping allegation"},
+                {doping: true,
+                color: "steelblue",
+                text:"Riders with doping allegations"}
+            ]
+
+        // create circles
+        const circles = svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScale(d.Year))
+            .attr("cy", d => yScale(new Date(d.Seconds * 1000)))
+            .attr("r", 5)
+            .attr("data-xvalue", d => d.Year)
+            .attr("data-yvalue", d => timeFormat(new Date(d.Seconds * 1000)))
+            .attr("class", "dot")
+            .attr("fill", d => {
+                if (d.Doping) {
+                    return color[1].color
+                }
+                return color[0].color
+            })
+
+        // create legend
+        const legendGroup = svg.append("g")
+            .attr("id", "legend");
+
+        var legend = legendGroup
+            .selectAll("#legend")
+            .data(color)
+            .enter()
+            .append("g")
+            .attr("class", "legend-label")
+            .attr("transform", (d, i) => `translate(0,${height / 2 -i * 20})`);
+
+            // create legend squares
+        legend.append("rect")
+            .attr("x", width - 20)
+            .attr("width", 18)
+            .attr("height", 18)
+            .attr("fill", d => d.color);
+
+            // create legend text
+        legend.append("text")
+            .attr("x", width - 25)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(d => d.text);
+
+        // add event listeners
+
     });
